@@ -1,0 +1,2 @@
+tweepy==3.6.0
+dateparser==0.7.0
