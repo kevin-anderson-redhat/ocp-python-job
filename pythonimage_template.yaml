@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: ${{TEMPLATE_NAME}}
+  annotations:
+    description: "Template to create a buildconfig for adding to the s2i python builder image."
+    tags: "python,${{TEMPLATE_NAME}}"
+labels:
+  template: ${{TEMPLATE_NAME}}
+  ${{TEMPLATE_NAME}}: augmented
+
+objects:
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    name: ${{TEMPLATE_NAME}}
+    labels:
+      app: ${{TEMPLATE_NAME}}
+  spec:
+    source:
+      contextDir: ${{SOURCE_REPOSITORY_CONTEXT}}
+      git:
+        uri: ${{SOURCE_REPOSITORY_URI}}
+      type: Git
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: python:3.6
+          namespace: openshift
+    output:
+      to:
+        kind: ImageStreamTag
+        name: ${TEMPLATE_NAME}:latest
+    triggers:
+    - type: GitHub
+      github:
+        secret: ${{SOURCE_SECRET}}
+    - type: ImageChange
+      imageChange: {}
+
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    labels:
+      app: ${{TEMPLATE_NAME}}
+    name: ${{TEMPLATE_NAME}}
+  spec:
+    lookupPolicy:
+      local: false
+
+parameters:
+- name: SOURCE_SECRET
+  description: git source secret
+  value: lneQpjzrjN5Z02Lhafro
+
+- name: SOURCE_REPOSITORY_URI
+  description: git repository for building augmentation
+  value: https://github.com/kevin-anderson-redhat/ocp-python-job.git
+
+- name: SOURCE_REPOSITORY_CONTEXT
+  description: git repository context where requirements.txt can be found
+  value: augment-builder-image
+
+- name: TEMPLATE_NAME
+  description: The name of all objects created here
+  value: python-plus-image
+
