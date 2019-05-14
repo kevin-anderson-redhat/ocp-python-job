@@ -1,0 +1,20 @@
+#!/usr/bin/python
+import sys,os
+
+sys.path.append('./ConfigArgParse')
+import configargparse
+
+
+
+
+if __name__ == "__main__":
+  parser = configargparse.ArgParser(description='Demonstrate environment argument passsing for containers')
+
+  parser.add('--allvars', action='store_true', env_var="MY_SCRIPT_ALL_VARS")
+  args = parser.parse_args()
+
+  if args.allvars:
+    print("allvars is true")
+  else:
+    print("allvars is false")
+
