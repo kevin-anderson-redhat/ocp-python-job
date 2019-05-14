@@ -7,13 +7,12 @@ metadata:
     tags: "python,quickstart"
 labels:
   template: ${{JOB_NAME}}
-  ${{TEMPLATE_NAME}}: augmented
 
 objects:
 - apiVersion: batch/v1
   kind: Job
   metadata:
-    name: $${{JOB_NAME}}
+    name: ${{JOB_NAME}}
   spec:
     parallelism: 1    
     completions: 1    
@@ -23,13 +22,23 @@ objects:
       spec:
         containers:
         - name: ${{IMAGE_NAME}}
-          image: 
-          command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+          image: ${{IMAGE_NAME}}
+          command: 
+             - "python"
+             - "-c"
+             - "import sys,os; print('MYPARM={}'.format(os.environ['MYPARM']));sys.exit(0)"
+          env:
+            - name: MYPARM
+              value: "${{STUPID_ENV}}"
         restartPolicy: OnFailure    
-  parameters:
-  - name: JOB_NAME
-    description: The name to associate with this job
-    required: true
-  - name: IMAGE_NAME
-    description: The name of the image to run
-    value: python-plus-image
+parameters:
+- name: JOB_NAME
+  description: The name to associate with this job
+  value: ppitest
+  #required: true
+- name: IMAGE_NAME
+  description: The name of the image to run
+  value: python-plus-image
+- name: STUPID_ENV
+  description: bogus text
+  value: "Really long stupid thing"
