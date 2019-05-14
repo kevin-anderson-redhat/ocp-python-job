@@ -47,7 +47,7 @@ objects:
     name: ${{TEMPLATE_NAME}}
   spec:
     lookupPolicy:
-      local: false
+      local: true
 
 parameters:
 - name: SOURCE_SECRET
