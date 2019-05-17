@@ -36,9 +36,24 @@ parameters:
   description: The name to associate with this job
   value: ppitest
   #required: true
+
 - name: IMAGE_NAME
   description: The name of the image to run
   value: python-plus-image
+
 - name: STUPID_ENV
   description: bogus text
   value: "Really long stupid thing"
+
+- name: AWS_ACCESS_KEY_ID
+  description: The access key for your AWS account
+  value: myawsaccesskeyhasnotbeenset
+
+- name: AWS_SECRET_ACCESS_KEY
+  description: The access key for your AWS account
+  value: myawssecretaccesskeyhasnotbeenset
+
+- name: AWS_SESSION_TOKEN_ID
+  description: The access key for your AWS account
+  value: myawssessiontokenhasnotbeeset
+
